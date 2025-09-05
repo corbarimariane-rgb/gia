@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Alongamento Interativo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #334155;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #556b2f;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        
+        .intro-section {
+            padding: 40px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .intro-section h2 {
+            font-size: 2.2rem;
+            color: #556b2f;
+            margin-bottom: 20px;
+        }
+        
+        .intro-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .intro-section .start-button {
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #556b2f;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .intro-section .start-button:hover {
+            background-color: #3f5123;
+            transform: translateY(-2px);
+        }
+
+        .image-section {
+            display: none; /* Inicia oculto */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        .stretching-figure-svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .stretching-figure-svg .body-part {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .stretching-figure-svg .body-part:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+
+        .stretching-figure-svg .body-part text {
+            pointer-events: none;
+            font-size: 10px; /* Aumentado o tamanho da fonte para melhor visualização */
+        }
+
+        .timer-section {
+            display: none; /* Inicia oculto */
+            margin-top: 40px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #e2e8f0;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        .timer-display {
+            font-size: 3rem;
+            font-weight: 600;
+            color: #556b2f;
+            margin-top: 10px;
+        }
+        
+        .timer-message {
+            font-size: 1.2rem;
+            color: #475569;
+        }
+
+        .timer-button.stop {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #dc2626;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .timer-button.stop:hover {
+            background-color: #991b1b;
+            transform: translateY(-2px);
+        }
+
+        #alongamentos-container {
+            width: 100%;
+            margin-top: 40px;
+            text-align: left;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background-color: #f8fafc;
+            display: none; /* Inicia oculto */
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        #alongamentos-container h2 {
+            font-size: 1.8rem;
+            color: #556b2f;
+            border-bottom: 2px solid #556b2f;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alongamento-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+
+        .alongamento-item:last-child {
+            border-bottom: none;
+        }
+
+        .alongamento-item h3 {
+            font-size: 1.3rem;
+            color: #475569;
+            margin: 0;
+            display: inline-block;
+        }
+        
+        .alongamento-item p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #64748b;
+            margin-top: 8px;
+        }
+        
+        .alongamento-item p.musculos {
+            font-size: 0.9rem;
+            font-style: italic;
+            color: #94a3b8;
+        }
+
+
+        .alongamento-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .timer-button-inline {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #556b2f;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .timer-button-inline:hover {
+            background-color: #3f5123;
+            transform: translateY(-1px);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="intro" class="intro-section">
+            <h2>Bem-vindo ao Guia Interativo de Alongamento!</h2>
+            <p>
+                Este é um guia visual para ajudar você a alongar as principais partes do seu corpo.
+                Aumente sua Amplitude de Movimento (ADM), melhore a flexibilidade e reduza a tensão muscular de forma simples e intuitiva.
+            </p>
+            <p>
+                Clique na parte do corpo que você deseja alongar na ilustração abaixo e siga as instruções dos exercícios.
+            </p>
+            <button class="start-button" onclick="playClickSound(); showMainApp()">Começar</button>
+        </div>
+
+        <div id="main-app" style="display: none;">
+            <header>
+                <h1>Guia Interativo de Alongamento</h1>
+                <p>Clique na parte do corpo que você deseja alongar.</p>
+            </header>
+
+            <main>
+                <div class="image-section" id="image-section">
+                    <svg class="stretching-figure-svg" viewBox="0 0 400 650" xmlns="http://www.w3.org/2000/svg">
+                        <title>Ilustração do corpo humano para alongamento</title>
+                        <g class="body-part" data-area="cervical" data-title="Cervical">
+                            <rect x="180" y="20" width="40" height="80" rx="20" ry="20" fill="#ef4444" />
+                            <text x="200" y="60" text-anchor="middle" fill="white" font-size="16">Cervical</text>
+                        </g>
+                        <g class="body-part" data-area="toraxica" data-title="Torácica">
+                            <rect x="150" y="100" width="100" height="120" rx="20" ry="20" fill="#f97316" />
+                            <text x="200" y="160" text-anchor="middle" fill="white" font-size="16">Torácica</text>
+                        </g>
+                        <g class="body-part" data-area="lombar" data-title="Lombar">
+                            <rect x="150" y="220" width="100" height="100" rx="20" ry="20" fill="#eab308" />
+                            <text x="200" y="270" text-anchor="middle" fill="white" font-size="16">Lombar</text>
+                        </g>
+                        <g class="body-part" data-area="ombro" data-title="Ombro">
+                            <rect x="100" y="100" width="50" height="50" rx="25" ry="25" fill="#8b5cf6" />
+                            <rect x="250" y="100" width="50" height="50" rx="25" ry="25" fill="#8b5cf6" />
+                            <text x="125" y="125" text-anchor="middle" fill="white" font-size="12">Ombro</text>
+                            <text x="275" y="125" text-anchor="middle" fill="white" font-size="12">Ombro</text>
+                        </g>
+                        <g class="body-part" data-area="braço" data-title="Braço">
+                            <rect x="100" y="150" width="50" height="80" rx="25" ry="25" fill="#4d7c0f" />
+                            <rect x="250" y="150" width="50" height="80" rx="25" ry="25" fill="#4d7c0f" />
+                            <text x="125" y="190" text-anchor="middle" fill="white" font-size="12">Braço</text>
+                            <text x="275" y="190" text-anchor="middle" fill="white" font-size="12">Braço</text>
+                        </g>
+                        <g class="body-part" data-area="antebraco" data-title="Antebraço">
+                            <rect x="100" y="230" width="50" height="80" rx="25" ry="25" fill="#1d4ed8" />
+                            <rect x="250" y="230" width="50" height="80" rx="25" ry="25" fill="#1d4ed8" />
+                            <text x="125" y="270" text-anchor="middle" fill="white" font-size="12">Antebraço</text>
+                            <text x="275" y="270" text-anchor="middle" fill="white" font-size="12">Antebraço</text>
+                        </g>
+                        <g class="body-part" data-area="punhos" data-title="Punhos">
+                            <rect x="100" y="310" width="50" height="30" rx="15" ry="15" fill="#be185d" />
+                            <rect x="250" y="310" width="50" height="30" rx="15" ry="15" fill="#be185d" />
+                            <text x="125" y="325" text-anchor="middle" fill="white" font-size="12">Punhos</text>
+                            <text x="275" y="325" text-anchor="middle" fill="white" font-size="12">Punhos</text>
+                        </g>
+                        <g class="body-part" data-area="dedos" data-title="Dedos">
+                            <rect x="100" y="340" width="50" height="30" rx="15" ry="15" fill="#db2777" />
+                            <rect x="250" y="340" width="50" height="30" rx="15" ry="15" fill="#db2777" />
+                            <text x="125" y="355" text-anchor="middle" fill="white" font-size="12">Dedos</text>
+                            <text x="275" y="355" text-anchor="middle" fill="white" font-size="12">Dedos</text>
+                        </g>
+                        <g class="body-part" data-area="quadril" data-title="Quadril">
+                            <rect x="150" y="320" width="100" height="80" rx="20" ry="20" fill="#065f46" />
+                            <text x="200" y="360" text-anchor="middle" fill="white" font-size="16">Quadril</text>
+                        </g>
+                        <g class="body-part" data-area="joelho" data-title="Joelho">
+                            <rect x="150" y="400" width="100" height="80" rx="20" ry="20" fill="#0ea5e9" />
+                            <text x="200" y="440" text-anchor="middle" fill="white" font-size="16">Joelho</text>
+                        </g>
+                        <g class="body-part" data-area="pés" data-title="Pés">
+                            <rect x="150" y="480" width="40" height="100" rx="20" ry="20" fill="#ec4899" />
+                            <rect x="210" y="480" width="40" height="100" rx="20" ry="20" fill="#ec4899" />
+                            <text x="170" y="520" text-anchor="middle" fill="white" font-size="16">Pés</text>
+                            <text x="230" y="520" text-anchor="middle" fill="white" font-size="16">Pés</text>
+                        </g>
+                    </svg>
+                </div>
+                
+                <div class="timer-section" id="timer-section">
+                    <p class="timer-message" id="timer-message">Clique em um alongamento para começar!</p>
+                    <div id="timer-display" class="timer-display">00:00</div>
+                    <button id="stop-timer-button" class="timer-button stop" onclick="playClickSound(); stopTimer()">Parar Temporizador</button>
+                </div>
+                
+                <div id="alongamentos-container">
+                    <h2 id="alongamentos-titulo">Selecione uma área do corpo para começar.</h2>
+                    <p id="alongamentos-mensagem">Clique na ilustração do corpo para ver os alongamentos específicos para a região desejada.</p>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        let alongamentosData = {
+            cervical: [
+                { nome: 'Inclinação da cabeça', descricao: 'Incline a cabeça para a direita, levando a orelha em direção ao ombro direito. Mantenha por 20 segundos e repita para o lado esquerdo.', musculos: 'Trapézio superior e esternocleidomastóideo.' },
+                { nome: 'Flexão para frente', descricao: 'Leve o queixo em direção ao peito, sentindo o alongamento na parte de trás do pescoço.', musculos: 'Músculos da nuca e trapézio.' },
+                { nome: 'Rotação da cabeça', descricao: 'Gire a cabeça lentamente para a direita, como se estivesse olhando por cima do ombro. Repita para o lado esquerdo.', musculos: 'Músculos laterais do pescoço.' },
+                { nome: 'Alongamento do pescoço (diagonal)', descricao: 'Incline a cabeça para a direita e, com a mão direita, puxe-a suavemente para baixo em direção ao ombro, olhando para o chão.', musculos: 'Trapézio e escalenos.' },
+                { nome: 'Alongamento do trapézio', descricao: 'Incline a cabeça para o lado e use a mão oposta para puxar suavemente, sentindo o alongamento do ombro ao pescoço.', musculos: 'Músculos do pescoço e ombro.' }
+            ],
+            toraxica: [
+                { nome: 'Alongamento gato-camelo', descricao: 'Em quatro apoios, arqueie as costas para cima (camelo) e depois para baixo (gato).', musculos: 'Músculos eretores da coluna e abdominais.' },
+                { nome: 'Extensão deitado', descricao: 'Deite de barriga para cima, com as mãos atrás da cabeça, e tente estender a coluna torácica.', musculos: 'Peitoral maior e menor.' },
+                { nome: 'Rotação sentada', descricao: 'Sente-se em uma cadeira e gire o tronco para a direita, usando o braço esquerdo para ajudar. Repita para o outro lado.', musculos: 'Oblíquos internos e externos.' },
+                { nome: 'Alongamento com rolo de espuma', descricao: 'Deite com o rolo de espuma perpendicular à coluna torácica e role para frente e para trás.', musculos: 'Músculos da coluna torácica.' },
+                { nome: 'Alongamento de peitoral na porta', descricao: 'Coloque o antebraço contra o batente da porta e avance com o corpo, sentindo o peito alongar.', musculos: 'Peitoral maior e deltoide anterior.' }
+            ],
+            lombar: [
+                { nome: 'Alongamento de joelhos ao peito', descricao: 'Deite de barriga para cima e traga um joelho de cada vez em direção ao peito, segurando com as mãos.', musculos: 'Paravertebrais e glúteos.' },
+                { nome: 'Alongamento da criança', descricao: 'Sente-se sobre os calcanhares, incline o tronco para frente e estique os braços à frente no chão.', musculos: 'Lombar e latíssimo do dorso.' },
+                { nome: 'Torção lombar deitada', descricao: 'Deite de barriga para cima, estenda os braços para os lados e deixe os joelhos caírem para um lado.', musculos: 'Oblíquos e músculos lombares.' },
+                { nome: 'Ponte de glúteo', descricao: 'Deite-se de costas com os joelhos dobrados e levante o quadril do chão, contraindo os glúteos.', musculos: 'Glúteo máximo e isquiotibiais.' },
+                { nome: 'Alongamento da esfinge', descricao: 'Deite de bruços e levante o tronco, apoiando-se nos antebraços, estendendo a coluna lombar.', musculos: 'Músculos abdominais e flexores do quadril.' }
+            ],
+            ombro: [
+                { nome: 'Alongamento cruzado de braço', descricao: 'Puxe um braço esticado em frente ao corpo com a outra mão.', musculos: 'Deltoide posterior e manguito rotador.' },
+                { nome: 'Alongamento de tríceps', descricao: 'Leve um braço por trás da cabeça e use a outra mão para puxar o cotovelo para baixo.', musculos: 'Tríceps e latíssimo do dorso.' },
+                { nome: 'Alongamento de peitoral na porta', descricao: 'Apoie os antebraços nas laterais de uma porta e incline o corpo para a frente para sentir o peito alongar.', musculos: 'Peitoral maior e menor.' },
+                { nome: 'Círculos com os braços', descricao: 'Faça círculos lentos com os braços para a frente e depois para trás.', musculos: 'Músculos do ombro e escápula.' },
+                { nome: 'Alongamento de deltoide', descricao: 'Com o braço esticado para o lado, puxe-o com a outra mão em direção ao peito.', musculos: 'Deltoide medial e posterior.' }
+            ],
+            braço: [
+                { nome: 'Alongamento de tríceps', descricao: 'Leve um braço por trás da cabeça e use a outra mão para puxar o cotovelo para baixo.', musculos: 'Tríceps braquial.' },
+                { nome: 'Alongamento de bíceps', descricao: 'Estique o braço para trás, com a palma da mão para cima, e segure a ponta dos dedos com a outra mão, puxando-os para trás.', musculos: 'Bíceps braquial e braquial anterior.' },
+                { nome: 'Alongamento cruzado', descricao: 'Puxe um braço esticado em frente ao corpo com a outra mão.', musculos: 'Deltoide posterior.' },
+                { nome: 'Alongamento de antebraço (flexores)', descricao: 'Com a palma da mão para baixo, puxe os dedos em direção ao corpo.', musculos: 'Músculos flexores do antebraço.' },
+                { nome: 'Alongamento de antebraço (extensores)', descricao: 'Com a palma da mão para cima, puxe os dedos para baixo.', musculos: 'Músculos extensores do antebraço.' }
+            ],
+            antebraco: [
+                { nome: 'Alongamento de flexores do antebraço', descricao: 'Com o braço estendido à frente, palma da mão para baixo, use a outra mão para puxar os dedos em direção ao corpo.', musculos: 'Flexores do punho e dedos.' },
+                { nome: 'Alongamento de extensores do antebraço', descricao: 'Com o braço estendido à frente, palma da mão para cima, use a outra mão para puxar os dedos para baixo.', musculos: 'Extensores do punho e dedos.' },
+                { nome: 'Rotação de punho', descricao: 'Faça círculos lentos com os punhos, em uma direção e depois na outra.', musculos: 'Músculos do punho e antebraço.' },
+                { nome: 'Alongamento de pulso em posição de oração', descricao: 'Junte as palmas das mãos em frente ao peito e abaixe as mãos até sentir o alongamento.', musculos: 'Flexores do punho.' },
+                { nome: 'Alongamento da parte de trás das mãos', descricao: 'Coloque as costas das mãos juntas e as baixe em direção ao chão.', musculos: 'Extensores do punho.' }
+            ],
+            quadril: [
+                { nome: 'Alongamento de borboleta', descricao: 'Sente-se com as solas dos pés juntas e use os cotovelos para empurrar os joelhos para baixo.', musculos: 'Adutores do quadril e glúteo médio.' },
+                { nome: 'Alongamento de pombo', descricao: 'Em quatro apoios, leve uma perna dobrada à frente do corpo e estenda a outra para trás.', musculos: 'Glúteo máximo e piriforme.' },
+                { nome: 'Alongamento de flexor do quadril', descricao: 'Ajoelhe-se com uma perna para a frente e incline o quadril para a frente.', musculos: 'Psoas e ilíaco.' },
+                { nome: 'Alongamento de glúteo deitado', descricao: 'Deite de costas, coloque um tornozelo sobre o joelho oposto e puxe a perna para o peito.', musculos: 'Glúteo e piriforme.' },
+                { nome: 'Alongamento do corredor', descricao: 'Em uma posição de estocada, abaixe o quadril em direção ao chão.', musculos: 'Psoas, ilíaco e quadríceps.' }
+            ],
+            joelho: [
+                { nome: 'Alongamento de isquiotibiais', descricao: 'Sente-se no chão, estenda uma perna e tente tocar os dedos do pé com as mãos.', musculos: 'Isquiotibiais.' },
+                { nome: 'Alongamento de quadríceps em pé', descricao: 'Fique em pé e puxe o pé em direção ao glúteo, segurando com a mão.', musculos: 'Quadríceps.' },
+                { nome: 'Alongamento de panturrilha', descricao: 'Pressione a ponta do pé contra uma parede, com o calcanhar no chão.', musculos: 'Gastrocnêmio e sóleo.' },
+                { nome: 'Círculos com a perna', descricao: 'Deite de costas e faça círculos lentos com uma perna estendida.', musculos: 'Músculos do quadril e joelho.' },
+                { nome: 'Alongamento de joelho ao peito', descricao: 'Deite de costas e traga o joelho em direção ao peito, segurando com as mãos.', musculos: 'Glúteos e paravertebrais.' }
+            ],
+            pés: [
+                { nome: 'Alongamento de panturrilha', descricao: 'Com uma perna à frente da outra, incline-se para a frente, mantendo o calcanhar de trás no chão.', musculos: 'Gastrocnêmio e sóleo.' },
+                { nome: 'Alongamento da fáscia plantar', descricao: 'Sente-se em uma cadeira, coloque o pé sobre o joelho oposto e puxe os dedos do pé para trás.', musculos: 'Fáscia plantar e flexores dos dedos.' },
+                { nome: 'Rotação do tornozelo', descricao: 'Gire o pé em círculos, em uma direção e depois na outra.', musculos: 'Músculos do tornozelo e pé.' },
+                { nome: 'Levantamento de calcanhares', descricao: 'Fique em pé e levante os calcanhares, ficando na ponta dos pés.', musculos: 'Panturrilha.' },
+                { nome: 'Alongamento do tendão de Aquiles', descricao: 'Com os dois pés no chão, leve um pé para trás e empurre o calcanhar para o chão.', musculos: 'Tendão de Aquiles.' }
+            ],
+            punhos: [
+                { nome: 'Alongamento de flexores do punho', descricao: 'Com o braço estendido, palma da mão para baixo, use a outra mão para puxar os dedos em direção ao corpo.', musculos: 'Músculos flexores do punho.' },
+                { nome: 'Alongamento de extensores do punho', descricao: 'Com o braço estendido, palma da mão para cima, use a outra mão para puxar os dedos para baixo.', musculos: 'Músculos extensores do punho.' },
+                { nome: 'Rotação de punho', descricao: 'Faça círculos lentos com os punhos, em uma direção e depois na outra.', musculos: 'Músculos do punho.' },
+                { nome: 'Alongamento de pulso em posição de oração', descricao: 'Junte as palmas das mãos em frente ao peito e abaixe as mãos até sentir o alongamento.', musculos: 'Flexores do punho.' },
+                { nome: 'Alongamento da parte de trás das mãos', descricao: 'Coloque as costas das mãos juntas e as baixe em direção ao chão.', musculos: 'Extensores do punho.' }
+            ],
+            dedos: [
+                { nome: 'Flexão e extensão dos dedos', descricao: 'Abra e feche a mão repetidamente.', musculos: 'Músculos intrínsecos da mão e antebraço.' },
+                { nome: 'Alongamento individual de dedos', descricao: 'Puxe suavemente cada dedo para trás, um por um.', musculos: 'Músculos flexores dos dedos.' },
+                { nome: 'Alongamento de polegar', descricao: 'Dobre o polegar para dentro da palma da mão e feche o punho.', musculos: 'Músculos do polegar.' },
+                { nome: 'Círculos com os dedos', descricao: 'Faça círculos lentos com cada dedo, individualmente.', musculos: 'Músculos da mão.' },
+                { nome: 'Alongamento de mãos e dedos', descricao: 'Coloque a palma da mão contra uma parede e estique os dedos para trás.', musculos: 'Músculos extensores dos dedos.' }
+            ]
+        };
+        
+        let timer;
+        let timeRemaining;
+        let isRunning = false;
+        let currentExercise = '';
+        let beepInterval;
+        let audioContext;
+        
+        // Função para tocar um som de "clique" suave
+        function playClickSound() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.type = 'square';
+            oscillator.frequency.value = 880; 
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.01);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.05);
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.05);
+        }
+
+        // Função para tocar um som de "tick" suave
+        function playTick() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.type = 'triangle'; // Som mais suave que o quadrado
+            oscillator.frequency.value = 440; 
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.2);
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+
+        // Função para tocar o som de finalização do temporizador
+        function playEndSound() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const now = audioContext.currentTime;
+            
+            // Tom 1
+            const osc1 = audioContext.createOscillator();
+            const gain1 = audioContext.createGain();
+            osc1.connect(gain1);
+            gain1.connect(audioContext.destination);
+            osc1.type = 'sine';
+            osc1.frequency.value = 523.25; // Dó 5
+            gain1.gain.setValueAtTime(0.5, now);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc1.start(now);
+            osc1.stop(now + 0.3);
+
+            // Tom 2 (após 0.1s)
+            const osc2 = audioContext.createOscillator();
+            const gain2 = audioContext.createGain();
+            osc2.connect(gain2);
+            gain2.connect(audioContext.destination);
+            osc2.type = 'sine';
+            osc2.frequency.value = 659.25; // Mi 5
+            gain2.gain.setValueAtTime(0.5, now + 0.1);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            osc2.start(now + 0.1);
+            osc2.stop(now + 0.4);
+        }
+
+        function startTimer(seconds, exerciseName) {
+            if (isRunning) {
+                clearInterval(timer);
+                clearInterval(beepInterval);
+            }
+            
+            timeRemaining = seconds;
+            currentExercise = exerciseName;
+            isRunning = true;
+            document.getElementById('stop-timer-button').style.display = 'inline-block';
+            
+            document.getElementById('timer-message').textContent = `Alongando: ${currentExercise}`;
+            updateTimerDisplay();
+
+            playTick(); // Toca o som no início do alongamento
+            beepInterval = setInterval(playTick, 1000); // Toca o som a cada segundo
+
+            timer = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    clearInterval(beepInterval);
+                    isRunning = false;
+                    document.getElementById('timer-message').textContent = `Alongamento de ${currentExercise} concluído!`;
+                    document.getElementById('stop-timer-button').style.display = 'none';
+                    playEndSound(); // Toca o som no final do alongamento
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+            clearInterval(beepInterval);
+            isRunning = false;
+            document.getElementById('timer-message').textContent = 'Temporizador parado.';
+            document.getElementById('stop-timer-button').style.display = 'none';
+            document.getElementById('timer-display').textContent = '00:00';
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer-display').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+        
+        function renderAlongamentos(area, title) {
+            const alongamentos = alongamentosData[area];
+            const alongamentosContainer = document.getElementById('alongamentos-container');
+            const timerSection = document.getElementById('timer-section');
+
+            if (alongamentos) {
+                alongamentosContainer.innerHTML = `<h2>Alongamentos para ${title}</h2>`;
+                alongamentos.forEach(item => {
+                    const div = document.createElement('div');
+                    div.classList.add('alongamento-item');
+                    div.innerHTML = `
+                        <h3>${item.nome}</h3>
+                        <p>${item.descricao}</p>
+                        <p class="musculos"><strong>Músculos alongados:</strong> ${item.musculos}</p>
+                        <div class="alongamento-buttons">
+                            <button class="timer-button-inline" onclick="playClickSound(); startTimer(30, '${item.nome}')">Manter ADM (30s)</button>
+                            <button class="timer-button-inline" onclick="playClickSound(); startTimer(60, '${item.nome}')">Ganhar ADM (1min)</button>
+                        </div>
+                    `;
+                    alongamentosContainer.appendChild(div);
+                });
+                alongamentosContainer.style.display = 'block';
+                timerSection.style.display = 'flex';
+            } else {
+                alongamentosContainer.innerHTML = `<h2>Nenhum alongamento encontrado para esta área.</h2>`;
+                alongamentosContainer.style.display = 'block';
+                timerSection.style.display = 'none';
+            }
+        }
+        
+        function showMainApp() {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            document.getElementById('image-section').style.display = 'flex';
+            
+            document.querySelectorAll('.stretching-figure-svg .body-part').forEach(group => {
+                group.addEventListener('click', (event) => {
+                    playClickSound();
+                    const area = event.target.closest('.body-part').dataset.area;
+                    const title = event.target.closest('.body-part').dataset.title;
+                    if (area && title) {
+                        renderAlongamentos(area, title);
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
